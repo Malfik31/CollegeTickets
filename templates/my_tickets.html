@@ -1,0 +1,6 @@
+{% extends "base.html" %}{% from "_m.html" import pager, empty %}{% block title %}Мои билеты{% endblock %}
+{% block content %}<h1>Мои билеты</h1>
+{% if not page.items %}{{ empty('У вас пока нет билетов. Выберите событие в афише.') }}{% endif %}
+<div class="grid">{% for t in page.items %}<a class="card ev" href="{{ url_for('ticket_page', tid=t.id) }}">
+<span class="tag st-{{ t.shown_status }}">{{ ST[t.shown_status] }}</span><h3>{{ t.event.title }}</h3>
+<p class="muted">{{ fmt(t.event.start_at) }} · {{ t.event.location }}</p></a>{% endfor %}</div>{{ pager(page) }}{% endblock %}

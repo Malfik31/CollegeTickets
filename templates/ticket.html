@@ -1,0 +1,10 @@
+{% extends "base.html" %}{% block title %}Мой билет{% endblock %}
+{% block content %}<div class="card narrow center">
+<span class="tag st-{{ t.shown_status }}">{{ ST[t.shown_status] }}</span><h1>{{ t.event.title }}</h1>
+<p class="muted">{{ fmt(t.event.start_at) }} · {{ t.event.location }}</p>
+{% if t.status == 'active' %}<img class="qr" src="{{ url_for('ticket_qr', tid=t.id) }}" alt="QR-код билета">
+<p>Код билета:</p><code class="token">{{ t.token }}</code>
+{% if t.checked_in_at %}<p>Вход отмечен: {{ fmt(t.checked_in_at) }}</p>
+{% elif now < t.event.start_at %}<form method="post" action="{{ url_for('ticket_cancel', tid=t.id) }}" data-confirm="Отменить регистрацию?">{{ csrf_field() }}<button class="btn danger">Отменить регистрацию</button></form>{% endif %}
+{% else %}<p>Регистрация отменена.</p><a class="btn" href="{{ url_for('event_page', eid=t.event_id) }}">К событию</a>{% endif %}
+</div>{% endblock %}

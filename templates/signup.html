@@ -1,0 +1,5 @@
+{% extends "base.html" %}{% from "_m.html" import field %}{% block title %}Регистрация{% endblock %}
+{% block content %}<form method="post" class="card narrow" novalidate><h1>Регистрация</h1>{{ csrf_field() }}
+{{ field('name','Имя',errors,f,'text','required minlength=2') }}{{ field('email','Email',errors,f,'email','required') }}
+{{ field('password','Пароль (от 6 символов)',errors,f,'password','required minlength=6') }}
+<button class="btn">Создать аккаунт</button></form>{% endblock %}

@@ -1,0 +1,2 @@
+{% extends "base.html" %}{% block title %}{{ code }}{% endblock %}
+{% block content %}<div class="card center"><h1>{{ code }}</h1><p>{{ text }}</p><a class="btn" href="{{ url_for('events') }}">На афишу</a></div>{% endblock %}

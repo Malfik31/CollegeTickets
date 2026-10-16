@@ -1,0 +1,13 @@
+{% extends "base.html" %}{% from "_m.html" import field %}{% block title %}Редактор события{% endblock %}
+{% block content %}<form method="post" enctype="multipart/form-data" class="card narrow" novalidate>
+<h1>{{ 'Редактирование' if ev else 'Новое событие' }}</h1>{{ csrf_field() }}
+{{ field('title','Название',errors,f,'text','required maxlength=120') }}
+<label class="fld">Описание<textarea name="description" rows="5" class="{{ 'bad' if errors.description }}">{{ f.get('description') or '' }}</textarea>{% if errors.description %}<span class="err">{{ errors.description }}</span>{% endif %}</label>
+{{ field('location','Место',errors,f,'text','required') }}
+<label class="fld">Категория<select name="category_id" class="{{ 'bad' if errors.category_id }}"><option value="">—</option>
+{% for c in cats %}<option value="{{ c.id }}" {{ 'selected' if f.get('category_id')|string == c.id|string }}>{{ c.name }}</option>{% endfor %}</select>{% if errors.category_id %}<span class="err">{{ errors.category_id }}</span>{% endif %}</label>
+{{ field('start_at','Начало',errors,f,'datetime-local') }}{{ field('end_at','Конец',errors,f,'datetime-local') }}
+{{ field('registration_deadline','Срок регистрации до',errors,f,'datetime-local') }}
+{{ field('capacity','Вместимость',errors,f,'number','min=1') }}
+<label class="fld">Обложка (JPG/PNG/WEBP до 2 МБ)<input type="file" name="cover" accept="image/jpeg,image/png,image/webp">{% if errors.cover %}<span class="err">{{ errors.cover }}</span>{% endif %}</label>
+<button class="btn">Сохранить</button> <a href="{{ url_for('my_events') }}">Отмена</a></form>{% endblock %}

@@ -1,0 +1,17 @@
+{% extends "base.html" %}{% block title %}{{ ev.title }}{% endblock %}
+{% block content %}<article class="card">
+{% if ev.cover %}<img class="hero" src="{{ url_for('static', filename='uploads/' + ev.cover) }}" alt="">{% endif %}
+<span class="tag">{{ ev.category.name }}</span> <span class="tag st-{{ ev.shown_status }}">{{ ST[ev.shown_status] }}</span>
+<h1>{{ ev.title }}</h1>
+<p class="muted">📍 {{ ev.location }}<br>🕒 {{ fmt(ev.start_at) }} — {{ fmt(ev.end_at) }}<br>Регистрация до {{ fmt(ev.registration_deadline) }}<br>Организатор: {{ ev.organizer.name }}</p>
+<p style="white-space:pre-wrap">{{ ev.description }}</p>
+<p><b>Свободно мест: {{ free if free > 0 else 0 }} из {{ ev.capacity }}</b></p>
+{% if mine and mine.status == 'active' %}<a class="btn" href="{{ url_for('ticket_page', tid=mine.id) }}">Мой билет</a>
+{% elif ev.status == 'cancelled' %}<div class="flash error">Событие отменено</div>
+{% elif ev.shown_status == 'finished' or now >= ev.start_at %}<div class="flash">Событие завершено или идёт</div>
+{% elif now > ev.registration_deadline %}<div class="flash">Срок регистрации истёк</div>
+{% elif free <= 0 %}<div class="flash error">Мест не осталось</div>
+{% elif user %}<form method="post" action="{{ url_for('register', eid=ev.id) }}">{{ csrf_field() }}<button class="btn">{{ 'Восстановить регистрацию' if mine else 'Записаться' }}</button></form>
+{% else %}<a class="btn" href="{{ url_for('login', next=request.path) }}">Войдите, чтобы записаться</a>{% endif %}
+{% if is_owner %}<hr><a href="{{ url_for('attendees', eid=ev.id) }}">Участники</a> · <a href="{{ url_for('check_in', eid=ev.id) }}">Контроль входа</a>{% endif %}
+</article>{% endblock %}

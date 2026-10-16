@@ -1,0 +1,11 @@
+{% extends "base.html" %}{% from "_m.html" import pager, empty %}{% block title %}Участники{% endblock %}
+{% block content %}<h1>Участники: {{ ev.title }}</h1>
+<div class="stats"><div class="card"><b id="s-reg">{{ stats.reg }}</b><span>регистраций</span></div>
+<div class="card"><b id="s-vis">{{ stats.visited }}</b><span>посещений</span></div>
+<div class="card"><b>{{ stats.cancelled }}</b><span>отменено</span></div></div>
+<form class="filters" method="get"><input type="search" name="q" value="{{ q }}" placeholder="Имя или email"><button class="btn small">Найти</button>
+<a class="btn small" href="{{ url_for('export', eid=ev.id) }}">CSV</a> <a class="btn small" href="{{ url_for('check_in', eid=ev.id) }}">Контроль входа</a></form>
+{% if not page.items %}{{ empty('Участников не найдено.') }}{% endif %}
+<div class="table-wrap"><table><tr><th>Имя</th><th>Email</th><th>Записан</th><th>Вход</th></tr>
+{% for t in page.items %}<tr><td>{{ t.user.name }}</td><td>{{ t.user.email }}</td><td>{{ fmt(t.created_at) }}</td><td>{{ fmt(t.checked_in_at) if t.checked_in_at else '—' }}</td></tr>{% endfor %}</table></div>
+{{ pager(page) }}{% endblock %}

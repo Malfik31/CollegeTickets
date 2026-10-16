@@ -1,0 +1,15 @@
+{% extends "base.html" %}{% from "_m.html" import pager, empty %}{% block title %}Афиша{% endblock %}
+{% block content %}<section class="hero-banner"><h1>События колледжа</h1><p>Мастер-классы, концерты и хакатоны. Запишитесь и получите электронный билет с QR-кодом.</p></section>
+<form class="filters" method="get" data-autosubmit>
+  <select name="category"><option value="">Все категории</option>
+  {% for c in cats %}<option value="{{ c.id }}" {{ 'selected' if c.id == cat }}>{{ c.name }}</option>{% endfor %}</select>
+  <input type="date" name="date" value="{{ day }}"><button class="btn small">Показать</button>
+  <a href="{{ url_for('events') }}">Сбросить</a></form>
+{% if not page.items %}{{ empty('Подходящих событий пока нет.') }}{% endif %}
+<div class="grid">{% for e in page.items %}{% set free = e.free %}
+<a class="card ev" href="{{ url_for('event_page', eid=e.id) }}">
+  <div class="cover" {% if e.cover %}style="background-image:url('{{ url_for('static', filename='uploads/' + e.cover) }}')"{% endif %}></div>
+  <span class="tag">{{ e.category.name }}</span><h3>{{ e.title }}</h3>
+  <p class="muted">{{ fmt(e.start_at) }} · {{ e.location }}</p>
+  <p class="{{ 'ok' if free > 0 else 'bad' }}">{{ 'Свободно мест: ' ~ free if free > 0 else 'Мест нет' }}</p></a>{% endfor %}</div>
+{{ pager(page) }}{% endblock %}

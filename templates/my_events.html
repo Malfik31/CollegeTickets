@@ -1,0 +1,13 @@
+{% extends "base.html" %}{% from "_m.html" import pager, empty %}{% block title %}Мои события{% endblock %}
+{% block content %}<h1>Мои события</h1><a class="btn" href="{{ url_for('event_new') }}">+ Новое событие</a>
+{% if not page.items %}{{ empty('Вы ещё не создали ни одного события.') }}{% endif %}
+<div class="table-wrap"><table>{% for e in page.items %}<tr>
+<td><a href="{{ url_for('event_page', eid=e.id) }}">{{ e.title }}</a><br><span class="muted">{{ fmt(e.start_at) }}</span></td>
+<td><span class="tag st-{{ e.shown_status }}">{{ ST[e.shown_status] }}</span></td>
+<td>{{ e.active_count }} / {{ e.capacity }}</td>
+<td class="actions">
+{% if e.status == 'draft' %}<form method="post" action="{{ url_for('event_status', eid=e.id) }}">{{ csrf_field() }}<input type="hidden" name="action" value="publish"><button class="btn small">Опубликовать</button></form>{% endif %}
+{% if e.shown_status == 'published' %}<form method="post" action="{{ url_for('event_status', eid=e.id) }}" data-confirm="Отменить событие? Вход и регистрации будут закрыты.">{{ csrf_field() }}<input type="hidden" name="action" value="cancel"><button class="btn small danger">Отменить</button></form>{% endif %}
+{% if e.status in ('draft','published') and e.shown_status != 'finished' %}<a class="btn small" href="{{ url_for('event_edit', eid=e.id) }}">Изменить</a>{% endif %}
+<a class="btn small" href="{{ url_for('attendees', eid=e.id) }}">Участники</a>
+<a class="btn small" href="{{ url_for('check_in', eid=e.id) }}">Вход</a></td></tr>{% endfor %}</table></div>{{ pager(page) }}{% endblock %}

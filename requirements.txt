@@ -1,0 +1,4 @@
+Flask>=3.0
+Flask-SQLAlchemy>=3.1
+segno>=1.6
+pytest>=8.0

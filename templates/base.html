@@ -1,0 +1,22 @@
+<!doctype html><html lang="ru"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="csrf" content="{{ csrf() }}">
+<title>{% block title %}EventPass{% endblock %} — EventPass</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&subset=cyrillic&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}"></head><body>
+<header class="top"><a class="logo" href="{{ url_for('events') }}">🎟 Event<span>Pass</span></a>
+<nav>
+  <a href="{{ url_for('events') }}">Афиша</a>
+  {% if user %}
+    <a href="{{ url_for('my_tickets') }}">Мои билеты</a>
+    {% if user.role == 'organizer' %}<a href="{{ url_for('my_events') }}">Мои события</a>{% endif %}
+    {% if user.role == 'admin' %}<a href="{{ url_for('admin_users') }}">Пользователи</a>{% endif %}
+    <a href="{{ url_for('profile') }}">{{ user.name }}</a>
+    <form method="post" action="{{ url_for('logout') }}">{{ csrf_field() }}<button class="link">Выйти</button></form>
+  {% else %}<a href="{{ url_for('login') }}">Вход</a><a href="{{ url_for('signup') }}">Регистрация</a>{% endif %}
+</nav></header>
+<main>
+{% for cat, m in get_flashed_messages(with_categories=true) %}<div class="flash {{ cat }}">{{ m }}</div>{% endfor %}
+{% block content %}{% endblock %}
+</main><footer class="footer">EventPass · события колледжа и электронные билеты</footer><script src="{{ url_for('static', filename='app.js') }}"></script></body></html>

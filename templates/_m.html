@@ -1,0 +1,14 @@
+{% macro field(name, label, errors, f, type='text', extra='') %}
+<label class="fld">{{ label }}
+  <input type="{{ type }}" name="{{ name }}" value="{{ '' if type == 'password' else (f.get(name) or '') }}" {{ extra|safe }} class="{{ 'bad' if errors.get(name) }}">
+  {% if errors.get(name) %}<span class="err">{{ errors[name] }}</span>{% endif %}
+</label>
+{% endmacro %}
+{% macro pager(page) %}
+{% if page.pages > 1 %}<nav class="pager">
+  {% if page.has_prev %}<a href="{{ request.path }}?{{ (request.args.to_dict() | merge({'page': page.prev_num})) | urlencode }}">← Назад</a>{% endif %}
+  <span>{{ page.page }} / {{ page.pages }}</span>
+  {% if page.has_next %}<a href="{{ request.path }}?{{ (request.args.to_dict() | merge({'page': page.next_num})) | urlencode }}">Далее →</a>{% endif %}
+</nav>{% endif %}
+{% endmacro %}
+{% macro empty(text) %}<p class="empty">{{ text }}</p>{% endmacro %}

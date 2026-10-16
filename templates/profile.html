@@ -1,0 +1,5 @@
+{% extends "base.html" %}{% from "_m.html" import field %}{% block title %}Профиль{% endblock %}
+{% block content %}<form method="post" class="card narrow" novalidate><h1>Профиль</h1>{{ csrf_field() }}
+<p class="muted">{{ user.email }} · роль: {{ user.role }}</p>
+{{ field('name','Имя',errors,f,'text','required') }}{{ field('password','Новый пароль (необязательно)',errors,f,'password') }}
+<button class="btn">Сохранить</button></form>{% endblock %}

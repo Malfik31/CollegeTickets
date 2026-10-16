@@ -1,0 +1,9 @@
+{% extends "base.html" %}{% block title %}Контроль входа{% endblock %}
+{% block content %}<div class="card narrow"><h1>Контроль входа</h1><p class="muted">{{ ev.title }}</p>
+{% if ev.status != 'published' %}<div class="flash error">Событие не опубликовано или отменено — вход закрыт.</div>{% endif %}
+<form id="checkin" data-url="{{ url_for('check_in', eid=ev.id) }}" novalidate>
+<label class="fld">Токен билета или ссылка<input name="token" autocomplete="off" autofocus required></label>
+<button class="btn">Проверить и отметить вход</button></form>
+<div id="result" class="flash" hidden></div>
+<p>Регистраций: <b id="s-reg">—</b> · Посещений: <b id="s-vis">—</b></p>
+<a href="{{ url_for('attendees', eid=ev.id) }}">Отчёт по участникам</a></div>{% endblock %}
